@@ -1,8 +1,8 @@
-.section init
-.global _start
+@ .section .init
+.globl _start
 
 _start:
-ldr r0,=0x3F000000
+ldr r0,=0x3F200000
 
 mov r1,#1
 lsl r1,#27
