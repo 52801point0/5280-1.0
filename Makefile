@@ -29,4 +29,9 @@ boot:
 clean:
 	rm -fv kernel.img *.o *.elf
 
+commit:
+	make clean
+	git add -A
+	@sh ./get_commit_message.sh
+	git commit -m commit_message.txt
 
