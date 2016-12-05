@@ -12,6 +12,6 @@ read line
 while [ "$line" != "." ]
 do
 	echo $line >> $message
-    read line
+	read line
 done
 
