@@ -33,7 +33,7 @@ commit:
 	make clean
 	git add -A
 	@sh ./get_commit_message.sh
-	git commit -m commit_message.txt
+	git commit -F commit_message.txt
 	git pull
 	git push
 
