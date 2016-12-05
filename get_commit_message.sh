@@ -5,8 +5,8 @@ message=commit_message.txt
 rm -f $message
 touch $message
 
-echo "Ready to commit, give me a message (it can be multiple lines); end with '.'"
-echo -n "> "
+/bin/echo "Ready to commit; give me a message (it can be multiple lines); end with '.'"
+/bin/echo -n "> "
 
 read line
 while [ "$line" != "." ]
