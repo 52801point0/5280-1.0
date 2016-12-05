@@ -34,4 +34,6 @@ commit:
 	git add -A
 	@sh ./get_commit_message.sh
 	git commit -m commit_message.txt
+	git pull
+	git push
 
