@@ -31,6 +31,48 @@ _start:
 2:
 	cmp r4, r9
 	blo 1b
+
+    // Initialise GPIO 9, 10, 11
+    // base address of GPIO on RPI 3b
+    // enable GPIO pins, set for output.
+    // turn on 9, turn off 10, turn on 11
+    // experiment with delay and looping
+    // Is there a timer I can use? Can I set up a periodic interrupt?
+
+    ldr r0,=0x3f200000
+    mov r1,#1
+    lsl r1,#18  // 6 * 3
+    str r1,[r0,#4] // GPIO 16
+
+    // Enable GPIO 9
+    mov r1,#1
+    lsl r1,#27 // 9 * 3
+    str r1,[r0,#0] // 0th set of ten GPIO pins
+ 
+    // Enable GPIO 10
+    mov r1,#1
+    lsl r1,#0 // 0 * 3
+    str r1,[r0,#4] // 1th set of ten GPIO pins
+ 
+    // Enable GPIO 11
+    mov r1,#1
+    lsl r1,#3 // 1 * 3
+    str r1,[r0,#4] // 1th set of ten GPIO pins
+
+    // Turn on GPIO 9
+    mov r1,#1
+    lsl r1,#9
+    str r1,[r0,#40]
+ 
+    // Turn off GPIO 10
+    mov r1,#1
+    lsl r1,#10
+    str r1,[r0,#28]
+ 
+    // Turn on GPIO 11
+    mov r1,#1
+    lsl r1,#11
+    str r1,[r0,#40]
  
 	// Call kernel_main
 	ldr r3, =kernel_main
