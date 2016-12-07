@@ -37,3 +37,6 @@ commit:
 	git pull
 	git push
 
+install: $(kernel)
+	sudo mv $(kernel) /boot/kernel7.img
+
