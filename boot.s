@@ -3,6 +3,67 @@
  
 // Make _start global.
 .globl _start
+
+_start:
+    // Using r10, r11, and r12 to avoid stepping on other code
+    // Base address for GPIO on RPi 3b
+    ldr r10,=0x3f200000
+
+    // The method of reading the register and masking bits is from
+    // https://www.raspberrypi.org/forums/viewtopic.php?&t=48770
+
+    // Enable only GPIO 9
+    // #0 means first set of 10 GPIO pins; #7 is bitmask; #27 is 9 times 3
+    // (for GPIO 9)
+    ldr r2,[r10,#0]
+    mov r11,#7
+    lsl r11,#27
+    bic r12,r12
+
+    mov r11,#1
+    lsl r11,#27
+    orr r11,r12
+    str r11,[r10,#28]
+
+    // Enable only GPIO 10
+    // #4 means second set of 10 GPIO pins; #7 is bitmask; #0 is 0 times 3
+    // (for GPIO 10)
+    ldr r12,[r10,#4]
+    mov r11,#7
+    lsl r11,#0
+    bic r12,r12
+
+    mov r11,#1
+    lsl r11,#0
+    orr r11,r12
+    str r11,[r10,#28]
+
+    // Enable only GPIO 11
+    // #4 means second set of 10 GPIO pins; #7 is bitmask; #3 is 1 times 3
+    // (for GPIO 11)
+    ldr r12,[r10,#4]
+    mov r11,#7
+    lsl r11,#3
+    bic r12,r12
+
+    mov r11,#1
+    lsl r11,#3
+    orr r11,r12
+    str r11,[r10,#28]
+
+    // Turn on GPIO 9
+    mov r11,#1
+    lsl r11,#9
+    str r11,[r10,#40]
+ 
+    // Turn off GPIO 10
+    mov r11,#1
+    lsl r11,#10
+    str r11,[r10,#28]
+ 
+    // Turn on GPIO 11
+    mov r11,#1
+    lsl r11,#11
  
 // Entry point for the kernel.
 // r15 -> should begin execution at 0x8000.
@@ -10,7 +71,7 @@
 // r1 -> 0x00000C42
 // r2 -> 0x00000100 - start of ATAGS
 // preserve these registers as argument for kernel_main
-_start:
+
 	// Setup the stack.
 	mov sp, #0x8000
  
@@ -32,48 +93,6 @@ _start:
 	cmp r4, r9
 	blo 1b
 
-    // Initialise GPIO 9, 10, 11
-    // base address of GPIO on RPI 3b
-    // enable GPIO pins, set for output.
-    // turn on 9, turn off 10, turn on 11
-    // experiment with delay and looping
-    // Is there a timer I can use? Can I set up a periodic interrupt?
-
-    ldr r0,=0x3f200000
-    mov r1,#1
-    lsl r1,#18  // 6 * 3
-    str r1,[r0,#4] // GPIO 16
-
-    // Enable GPIO 9
-    mov r1,#1
-    lsl r1,#27 // 9 * 3
-    str r1,[r0,#0] // 0th set of ten GPIO pins
- 
-    // Enable GPIO 10
-    mov r1,#1
-    lsl r1,#0 // 0 * 3
-    str r1,[r0,#4] // 1th set of ten GPIO pins
- 
-    // Enable GPIO 11
-    mov r1,#1
-    lsl r1,#3 // 1 * 3
-    str r1,[r0,#4] // 1th set of ten GPIO pins
-
-    // Turn on GPIO 9
-    mov r1,#1
-    lsl r1,#9
-    str r1,[r0,#40]
- 
-    // Turn off GPIO 10
-    mov r1,#1
-    lsl r1,#10
-    str r1,[r0,#28]
- 
-    // Turn on GPIO 11
-    mov r1,#1
-    lsl r1,#11
-    str r1,[r0,#40]
- 
 	// Call kernel_main
 	ldr r3, =kernel_main
 	blx r3
