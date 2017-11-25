@@ -1,7 +1,7 @@
 commit_message.txt
 kernel.img
 .DS_Store
-kernel7.img
-*.o
-*.elf
-*.bin
+bootable_kernel/kernel7.img
+bootable_kernel/*.o
+bootable_kernel/*.elf
+bootable_kernel/*.bin
